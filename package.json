@@ -53,6 +53,7 @@
     "typescript": "^4.7.3"
   },
   "dependencies": {
-    "@types/dom-serial": "^1.0.2"
+    "@types/dom-serial": "^1.0.2",
+    "unzipit": "^1.4.0"
   }
 }
