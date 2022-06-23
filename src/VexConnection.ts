@@ -129,10 +129,10 @@ export class VexSerialConnection extends VexEventTarget {
                 wantedCommandId: rawData instanceof DeviceBoundPacket ? (rawData.constructor as any).COMMAND_ID : undefined,
                 wantedCommandExId: rawData instanceof DeviceBoundPacket ? (rawData.constructor as any).COMMAND_EXTENDED_ID : undefined
             };
-            this.callbacksQueue.push(cb);logData(data, 100);
+            this.callbacksQueue.push(cb);
 
             try {
-                this.writer.write(data).then(() => {  });
+                this.writer.write(data).then(() => { logData(data, 100); });
             } catch (error) {
                 this.callbacksQueue.splice(this.callbacksQueue.indexOf(cb), 1);
                 done(AckType.WRITE_ERROR);
@@ -496,6 +496,8 @@ export class V5SerialConnection extends VexSerialConnection {
 }
 
 function logData(data: Uint8Array, limitedSize: number) {
+    if (data === undefined) return;
+
     limitedSize || (limitedSize = data.length);
     let a = "";
     for (let n = 0; n < data.length && n < limitedSize; n++)

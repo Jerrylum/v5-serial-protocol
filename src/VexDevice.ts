@@ -904,9 +904,6 @@ export class V5SerialDevice extends VexSerialDevice {
     }
 
     async refresh() {
-        // let matchStatus = await this.connection?.getMatchStatus();
-        // console.log(matchStatus);
-
         let ssPacket = await this.connection?.getSystemStatus();
         if (!ssPacket) {
             this.state.brain.isAvailable = false;
@@ -929,50 +926,47 @@ export class V5SerialDevice extends VexSerialDevice {
 
         this.state.brain.uniqueId = ssPacket.uniqueId;
 
-        // let sfPacket = await this.connection?.getSystemFlags();
-        // if (!sfPacket) return false;
+        let sfPacket = await this.connection?.getSystemFlags();
+        if (!sfPacket) return false;
 
-        // let flags5 = sfPacket.flags; // Math.pow(2, 32 - i);
-        // this.state.radio.isRadioData = (flags5 & Math.pow(2, 32 - 12)) !== 0;
-        // this.state.brain.button.isDoublePressed = (flags5 & Math.pow(2, 32 - 14)) !== 0;
-        // this.state.brain.battery.isCharging = (flags5 & Math.pow(2, 32 - 15)) !== 0;
-        // this.state.brain.button.isPressed = (flags5 & Math.pow(2, 32 - 17)) !== 0;
-        // this.state.radio.isVexNet = (flags5 & Math.pow(2, 32 - 18)) !== 0;
-        // this.state.controllers[1].isAvailable = (flags5 & Math.pow(2, 32 - 19)) !== 0;
-        // this.state.radio.isConnected = (flags5 & Math.pow(2, 32 - 22)) !== 0;
-        // this.state.radio.isAvailable = (flags5 & Math.pow(2, 32 - 23)) !== 0;
-        // this.state.brain.battery.batteryPercent = sfPacket.battery || 0;
-        // this.state.controllers[0].isAvailable = this.state.radio.isConnected || this.state.controllers[0].isCharging;
-        // this.state.controllers[0].battery = sfPacket.controllerBatteryPercent || 0;
-        // this.state.controllers[1].battery = sfPacket.partnerControllerBatteryPercent || 0;
-        // this.state.brain.activeProgram = sfPacket.currentProgram;
-        // this.state.brain.isAvailable = !this.isV5Controller || this.state.radio.isConnected;
+        let flags5 = sfPacket.flags; // Math.pow(2, 32 - i);
+        this.state.radio.isRadioData = (flags5 & Math.pow(2, 32 - 12)) !== 0;
+        this.state.brain.button.isDoublePressed = (flags5 & Math.pow(2, 32 - 14)) !== 0;
+        this.state.brain.battery.isCharging = (flags5 & Math.pow(2, 32 - 15)) !== 0;
+        this.state.brain.button.isPressed = (flags5 & Math.pow(2, 32 - 17)) !== 0;
+        this.state.radio.isVexNet = (flags5 & Math.pow(2, 32 - 18)) !== 0;
+        this.state.controllers[1].isAvailable = (flags5 & Math.pow(2, 32 - 19)) !== 0;
+        this.state.radio.isConnected = (flags5 & Math.pow(2, 32 - 22)) !== 0;
+        this.state.radio.isAvailable = (flags5 & Math.pow(2, 32 - 23)) !== 0;
+        this.state.brain.battery.batteryPercent = sfPacket.battery || 0;
+        this.state.controllers[0].isAvailable = this.state.radio.isConnected || this.state.controllers[0].isCharging;
+        this.state.controllers[0].battery = sfPacket.controllerBatteryPercent || 0;
+        this.state.controllers[1].battery = sfPacket.partnerControllerBatteryPercent || 0;
+        this.state.brain.activeProgram = sfPacket.currentProgram;
+        this.state.brain.isAvailable = !this.isV5Controller || this.state.radio.isConnected;
 
-        // let rdPacket = await this.connection?.getRadioStatus();
-        // if (!rdPacket) return false;
+        let rdPacket = await this.connection?.getRadioStatus();
+        if (!rdPacket) return false;
 
-        // this.state.radio.channel = rdPacket.channel;
-        // this.state.radio.latency = rdPacket.timeslot;
-        // this.state.radio.signalQuality = rdPacket.quality;
-        // this.state.radio.signalStrength = rdPacket.strength;
+        this.state.radio.channel = rdPacket.channel;
+        this.state.radio.latency = rdPacket.timeslot;
+        this.state.radio.signalQuality = rdPacket.quality;
+        this.state.radio.signalStrength = rdPacket.strength;
 
-        // let dsPacket = await this.connection?.getDeviceStatus();
-        // if (!dsPacket) return false;
+        let dsPacket = await this.connection?.getDeviceStatus();
+        if (!dsPacket) return false;
 
-        // let missingPorts = this.state.devices.map((d) => d?.port).filter((p) => p !== undefined);
+        let missingPorts = this.state.devices.map((d) => d?.port).filter((p) => p !== undefined);
 
-        // for (let i = 0; i < dsPacket.devices.length; i++) {
-        //     let device = dsPacket.devices[i];
-        //     this.state.devices[device.port] = device;
+        for (let i = 0; i < dsPacket.devices.length; i++) {
+            let device = dsPacket.devices[i];
+            this.state.devices[device.port] = device;
 
-        //     // remove device port from missing ports
-        //     missingPorts = missingPorts.filter((p) => p !== device.port);
-        // }
+            // remove device port from missing ports
+            missingPorts = missingPorts.filter((p) => p !== device.port);
+        }
 
-        // missingPorts.forEach((port) => delete this.state.devices[port]);
-
-        // console.log(this.state);
-
+        missingPorts.forEach((port) => delete this.state.devices[port]);
 
         return true;
     }

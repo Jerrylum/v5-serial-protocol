@@ -53,6 +53,7 @@ export class VexFirmwareVersion {
     static allZero() {
         return new VexFirmwareVersion(0, 0, 0, 0);
     }
+
     /**
      * Take a a string of MAJOR_MINOR_BUILD_BETA and converts it to a
      * VexFirmwareVersion instance
@@ -92,6 +93,7 @@ export class VexFirmwareVersion {
     toInternalString() {
         return `${this.toUserString()}.b${this.beta}`;
     }
+
     /**
      * compares this version to the provided version.
      * * if this < b: negative
